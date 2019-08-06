@@ -7,6 +7,6 @@ public class main {
 	public static void main(String[] args) throws FileNotFoundException, IOException{
 		
 		htmlStripper strip = new htmlStripper();
-		strip.read("/home/greg/Documents/test.txt");
+		strip.readAndStrip("/home/greg/Documents/htmlDocTest.txt", "/home/greg/Documents/htmlStripped.txt");
 	}
 }
