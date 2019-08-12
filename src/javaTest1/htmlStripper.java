@@ -1,11 +1,23 @@
 package javaTest1;
 
 import java.io.*;
+import java.util.ArrayList;
+
 
 public class htmlStripper {
 	
-	public htmlStripper(){
+	private ArrayList<String> htmlTags = new ArrayList<String>();
+	
+	public htmlStripper(String pathToReference) throws IOException{
 		
+		BufferedReader referenceReader = new BufferedReader(new FileReader(pathToReference));
+			
+		String tempLine = "";
+		while ((tempLine = referenceReader.readLine()) != null) {
+			htmlTags.add(tempLine);
+		}
+		
+		referenceReader.close();
 	}
 	
 	//Read and strip the file and create a new file with the html tags stripped out.
@@ -64,5 +76,29 @@ public class htmlStripper {
 		}	
 		
 		return stripped;
+	}
+	
+	//New version of the tag stripper using the file of reference tags.
+	public String readAndStripv2(String path, String pathToNew) throws IOException {
+		String originFile = this.read(path);
+		
+		for(String tag : this.htmlTags) {
+			originFile = originFile.replace(tag, "");
+			
+			//Since the reference file only has opening tags need to simulate a closing tag.
+			String tempTag = tag;
+			StringBuilder builder = new StringBuilder(tempTag);
+			int tempTagLen = tempTag.length();
+			builder.insert((tempTagLen - (tempTagLen -1)), '/');
+			tempTag = builder.toString();
+			
+			originFile = originFile.replace(tempTag, "");
+		}
+		
+		FileWriter writer = new FileWriter(pathToNew);
+		writer.write(originFile);
+		writer.close();
+		
+		return originFile;
 	}
 }
